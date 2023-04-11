@@ -2,9 +2,11 @@ package window;
 
 import Objects.Block;
 import Objects.Player;
+import Objects.Coin;
 import framework.KeyInput;
 import framework.ObjectID;
 import framework.Texture;
+
 
 import java.awt.*;
 import java.awt.event.KeyListener;
@@ -30,7 +32,7 @@ public class Game extends Canvas implements Runnable
     private void init()
     {
         BufferedImageLoader loader = new BufferedImageLoader();
-        level1 = loader.loadImage("/hartalvl1.png");
+        level1 = loader.loadImage("/hartalvll1.png");
         padure = loader.loadImage("/fundal.png");       //background
 
         cam = new Camera(0,0);
@@ -122,7 +124,7 @@ public class Game extends Canvas implements Runnable
 
         g2d.translate(cam.getX(), cam.getY());    //begin of cam
 
-        g.drawImage(padure,0,0,WIDTH*3,HEIGHT,null);
+        g.drawImage(padure,-400,0,WIDTH*4,HEIGHT,null);
 
         handler.render(g);
 
@@ -163,7 +165,10 @@ public class Game extends Canvas implements Runnable
                 {
                     handler.addObject(new Block(xx*32,yy*32, 1,ObjectID.Block));
                 }
-
+                if(red>=200 && green>=200 && blue <=10)
+                {
+                    handler.addObject(new Coin(xx*32,yy*32,ObjectID.Coin));
+                }
 
             }
         }

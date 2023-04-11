@@ -16,11 +16,18 @@ public class Player extends GameObject
     private float gravity = 0.3f;
     private float width = 32;
     private float height = 64;
+    private int collectedCoins = 0;
+    private int MAX_COINS = 2;
+    private int lives = 2;
+    private boolean alive = true;
+    private long deadTime = 0;
 
     private Handler handler;
     private Animation playerWalk;
     private Animation playerJump;
+    private Animation playerDie;
     private int facing;
+
 
     Texture tex = Game.getInstance();
 
@@ -30,6 +37,8 @@ public class Player extends GameObject
         this.handler = handler;
         playerWalk = new Animation(5,tex.player[0],tex.player[1],tex.player[2],tex.player[3],tex.player[4],tex.player[5],tex.player[6],tex.player[7]);
         playerJump = new Animation(5,tex.player_jump[0],tex.player_jump[1],tex.player_jump[2],tex.player_jump[3],tex.player_jump[4],tex.player_jump[5],tex.player_jump[6],tex.player_jump[7]);
+        playerDie = new Animation(12,tex.player_die[0],tex.player_die[1],tex.player_die[2],tex.player_die[3],tex.player_die[4],tex.player_die[5],tex.player_die[6],tex.player_die[7]);
+
     }
     @Override
     public void tick()
@@ -45,44 +54,58 @@ public class Player extends GameObject
                 velY = MAX_SPEED;
             }
         }
+        if(y>600)
+        {
+            alive = false;
+            die();
+        }
         Collision();
         playerWalk.runAnimatin();
         playerJump.runAnimatin();
+        playerDie.runAnimatin();
     }
 
     @Override
     public void render(Graphics g)
     {
-        if(velX>0)
-            facing = 1;
-        if(velX<0)
-            facing = -1;
-        if(jumping&&facing==1)
+        if(!alive)
         {
-            playerJump.drawAnimation(g,(int)x,(int)y,48,72);
-        } else
-            if (jumping&&facing==-1)
-        {
-            playerJump.drawAnimation(g,(int)x+32,(int)y,-48,72);
-
-        }
-            else
+            velX = 0;
+            velY = 0;
+            playerDie.drawAnimation(g, (int) x, (int) y, 48, 72);
+            if(deadTime==0)
+                deadTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis();                        //calculate the time needed to draw PLayerDie animation
+            if(currentTime - deadTime>1500)
             {
-                if (velX > 0)
-                {
+                die();
+            }
+        }
+        else
+        {
+            if (velX > 0)
+                facing = 1;
+            if (velX < 0)
+                facing = -1;
+            if (jumping && facing == 1) {
+                playerJump.drawAnimation(g, (int) x, (int) y, 48, 72);
+            } else if (jumping && facing == -1) {
+                playerJump.drawAnimation(g, (int) x + 32, (int) y, -48, 72);
+
+            } else {
+                if (velX > 0) {
                     playerWalk.drawAnimation(g, (int) x, (int) y, 48, 72);
+                } else if (velX < 0)
+                    playerWalk.drawAnimation(g, (int) x + 32, (int) y, -48, 72);
+                else {
+                    if (facing == 1)
+                        g.drawImage(tex.player[0], (int) x, (int) y, 48, 72, null);
+                    else
+                        g.drawImage(tex.player[0], (int) x + 32, (int) y, -48, 72, null);
                 }
-                else if (velX < 0)
-                        playerWalk.drawAnimation(g, (int) x + 32, (int) y, -48, 72);
-                     else
-                     {
-                         if(facing==1)
-                              g.drawImage(tex.player[0], (int) x, (int) y, 48, 72, null);
-                         else
-                             g.drawImage(tex.player[0], (int) x+32, (int) y, -48, 72, null);
-                     }
 
             }
+        }
     }
 
     @Override
@@ -137,9 +160,26 @@ public class Player extends GameObject
                     falling = true;
                 }
             }
-
+            if(tempObject.getID()==ObjectID.Coin)
+            {
+                if(getBoundsRight().intersects(tempObject.getBounds()) ||getBoundsLeft().intersects(tempObject.getBounds()))  //RIGHT
+                {
+                    handler.object.remove(i);
+                    collectedCoins++;
+                    System.out.println("coin collected");
+                    if(collectedCoins == 1)
+                    {
+                        System.out.println("Has collected all coins");
+                        alive = false;
+                    }
+                }
+            }
 
         }
+    }
+    public void die()
+    {
+        System.exit(1);
     }
 
 }

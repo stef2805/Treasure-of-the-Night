@@ -12,6 +12,8 @@ public class Texture
     public BufferedImage[] block = new BufferedImage[2];
     public BufferedImage[] player = new BufferedImage[16];
     public BufferedImage[] player_jump = new BufferedImage[8];
+    public BufferedImage[] player_die = new BufferedImage[8];
+    public BufferedImage[] coin = new BufferedImage[9];
 
     public Texture()
     {
@@ -48,6 +50,25 @@ public class Texture
         player_jump[5] = ps.grabImage(6,6,32,64);    //player jumping 6
         player_jump[6] = ps.grabImage(7,6,32,64);    //player jumping 7
         player_jump[7] = ps.grabImage(8,6,32,64);    //player jumping 8
+
+        player_die[0] = ps.grabImage(1,8,32,64);     //player dead
+        player_die[1] = ps.grabImage(2,8,32,64);
+        player_die[2] = ps.grabImage(3,8,32,64);
+        player_die[3] = ps.grabImage(4,8,32,64);
+        player_die[4] = ps.grabImage(5,8,32,64);
+        player_die[5] = ps.grabImage(6,8,32,64);
+        player_die[6] = ps.grabImage(7,8,32,64);
+        player_die[7] = ps.grabImage(8,8,32,64);
+
+        coin[0] = bs.grabImage(1,2,32,32);          //coin animation
+        coin[1] = bs.grabImage(2,2,32,32);
+        coin[2] = bs.grabImage(3,2,32,32);
+        coin[3] = bs.grabImage(4,2,32,32);
+        coin[4] = bs.grabImage(5,2,32,32);
+        coin[5] = bs.grabImage(6,2,32,32);
+        coin[6] = bs.grabImage(1,3,32,32);
+        coin[7] = bs.grabImage(2,3,32,32);
+        coin[8] = bs.grabImage(3,3,32,32);
     }
 
 
