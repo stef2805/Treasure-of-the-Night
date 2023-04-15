@@ -4,6 +4,7 @@ import framework.GameObject;
 import framework.ObjectID;
 import framework.Texture;
 import window.Animation;
+import window.Camera;
 import window.Game;
 import window.Handler;
 
@@ -23,6 +24,7 @@ public class Player extends GameObject
     private long deadTime = 0;
 
     private Handler handler;
+    private Camera cam;
     private Animation playerWalk;
     private Animation playerJump;
     private Animation playerDie;
@@ -31,9 +33,10 @@ public class Player extends GameObject
 
     Texture tex = Game.getInstance();
 
-    public Player(float x, float y, Handler handler,ObjectID id)
+    public Player(float x, float y, Handler handler, Camera cam, ObjectID id)
     {
         super(x,y,id);
+        this.cam = cam;
         this.handler = handler;
         playerWalk = new Animation(5,tex.player[0],tex.player[1],tex.player[2],tex.player[3],tex.player[4],tex.player[5],tex.player[6],tex.player[7]);
         playerJump = new Animation(5,tex.player_jump[0],tex.player_jump[1],tex.player_jump[2],tex.player_jump[3],tex.player_jump[4],tex.player_jump[5],tex.player_jump[6],tex.player_jump[7]);
@@ -54,7 +57,7 @@ public class Player extends GameObject
                 velY = MAX_SPEED;
             }
         }
-        if(y>600)
+        if(y>1000)
         {
             alive = false;
             die();
@@ -160,25 +163,38 @@ public class Player extends GameObject
                     falling = true;
                 }
             }
-            if(tempObject.getID()==ObjectID.Coin)
+            if(tempObject.getID()==ObjectID.Coin)           //verific daca a atins o moneda
             {
-                if(getBoundsRight().intersects(tempObject.getBounds()) ||getBoundsLeft().intersects(tempObject.getBounds()))  //RIGHT
+                if(getBoundsRight().intersects(tempObject.getBounds()) ||getBoundsLeft().intersects(tempObject.getBounds()))
                 {
-                    handler.object.remove(i);
-                    collectedCoins++;
+                    handler.object.remove(i);               //se colecteaza moneda si nu mai apare pe ecran deoarece e scoasa din handler
+                    collectedCoins++;                       //se creste nr de monede colectate
                     System.out.println("coin collected");
-                    if(collectedCoins == 1)
+                    if(collectedCoins == MAX_COINS)
                     {
                         System.out.println("Has collected all coins");
-                        alive = false;
                     }
+                }
+            }
+            if(tempObject.getID() == ObjectID.Flag)         //verific daca a atins un flag de final de nivel
+            {
+                if(getBoundsRight().intersects(tempObject.getBounds()) ||getBoundsLeft().intersects(tempObject.getBounds()))
+                {
+                    //switch lvl
+                    if(collectedCoins==MAX_COINS)           //trecerea la nivelul urmator se realizeaza doar daca a gasit toate monedele
+                    {
+                        handler.switchLevel();
+                        collectedCoins = 0;
+                    }
+
                 }
             }
 
         }
     }
-    public void die()
+    public void die()                           //functie de terminare joc atunci cand moare jucatorul
     {
+        System.out.println("A murit ");
         System.exit(1);
     }
 

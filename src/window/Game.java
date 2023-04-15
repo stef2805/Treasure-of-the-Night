@@ -6,6 +6,7 @@ import Objects.Coin;
 import framework.KeyInput;
 import framework.ObjectID;
 import framework.Texture;
+import Objects.Flag;
 
 
 import java.awt.*;
@@ -23,11 +24,14 @@ public class Game extends Canvas implements Runnable
     Camera cam;
     public static Texture tex;
 
-    private BufferedImage level1 = null;
+    public BufferedImage level1 = null;
+
     private BufferedImage padure = null;
     Random rand = new Random();
     private boolean running = false;
     private Thread thread;
+
+    public static int LEVEL = 1;
 
     private void init()
     {
@@ -38,13 +42,10 @@ public class Game extends Canvas implements Runnable
         cam = new Camera(0,0);
         WIDTH = getWidth();
         HEIGHT = getHeight();
-        handler = new Handler();
+        handler = new Handler(cam);
         tex = new Texture();
 
-        LoadImageLevel(level1);
-
-        //handler.addObject(new Player(100,100,handler,ObjectID.Player));
-        //handler.createLevel();
+        handler.LoadImageLevel(level1);
 
         this.addKeyListener(new KeyInput(handler));
     }
@@ -124,7 +125,8 @@ public class Game extends Canvas implements Runnable
 
         g2d.translate(cam.getX(), cam.getY());    //begin of cam
 
-        g.drawImage(padure,-400,0,WIDTH*4,HEIGHT,null);
+        g.drawImage(padure,-400,0,WIDTH*3,HEIGHT,null);
+        g.drawImage(padure,-400+2*WIDTH*3,0,-WIDTH*3,HEIGHT,null);
 
         handler.render(g);
 
@@ -139,40 +141,7 @@ public class Game extends Canvas implements Runnable
         new Window(800,600, "Treasure of the Night", new Game());
     }
 
-    private void LoadImageLevel(BufferedImage image)
-    {
-        int w = image.getWidth();
-        int h = image.getHeight();
 
-        for (int xx=0;xx<h;xx++)
-        {
-            for(int yy=0;yy<w;yy++)
-            {
-                int pixel = image.getRGB(xx,yy);
-                int red = (pixel>>16) & 0xff;
-                int green = (pixel>>8) & 0xff;;
-                int blue = (pixel) & 0xff;;
-
-                if(red<=10 && green<=10 && blue <=10)
-                {
-                    handler.addObject(new Block(xx*32,yy*32,0,ObjectID.Block));
-                }
-                if(red<=10 && green<=10 && blue >=200)
-                {
-                    handler.addObject(new Player(xx*32,yy*32, handler, ObjectID.Player));
-                }
-                if(red==50 && green==150 && blue ==50)
-                {
-                    handler.addObject(new Block(xx*32,yy*32, 1,ObjectID.Block));
-                }
-                if(red>=200 && green>=200 && blue <=10)
-                {
-                    handler.addObject(new Coin(xx*32,yy*32,ObjectID.Coin));
-                }
-
-            }
-        }
-    }
     public static Texture getInstance()
     {
         return tex;

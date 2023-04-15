@@ -4,5 +4,6 @@ public enum ObjectID
 {
     Player(),
     Coin(),
+    Flag(),
     Block();
 }
