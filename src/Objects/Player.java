@@ -29,6 +29,7 @@ public class Player extends GameObject
     private Animation playerWalk;
     private Animation playerJump;
     private Animation playerDie;
+    private Animation playerIdle;
 
 
     Texture tex = Game.getInstance();
@@ -41,7 +42,7 @@ public class Player extends GameObject
         playerWalk = new Animation(5,tex.player[0],tex.player[1],tex.player[2],tex.player[3],tex.player[4],tex.player[5],tex.player[6],tex.player[7]);
         playerJump = new Animation(5,tex.player_jump[0],tex.player_jump[1],tex.player_jump[2],tex.player_jump[3],tex.player_jump[4],tex.player_jump[5],tex.player_jump[6],tex.player_jump[7]);
         playerDie = new Animation(12,tex.player_die[0],tex.player_die[1],tex.player_die[2],tex.player_die[3],tex.player_die[4],tex.player_die[5],tex.player_die[6],tex.player_die[7]);
-
+        playerIdle = new Animation(15,tex.player_idle[0],tex.player_idle[1],tex.player_idle[2],tex.player_idle[3]);
     }
     @Override
     public void tick()
@@ -66,6 +67,7 @@ public class Player extends GameObject
         playerWalk.runAnimatin();
         playerJump.runAnimatin();
         playerDie.runAnimatin();
+        playerIdle.runAnimatin();
     }
 
     @Override
@@ -102,9 +104,9 @@ public class Player extends GameObject
                     playerWalk.drawAnimation(g, (int) x + 48, (int) y, -48, 72);
                 else {
                     if (facing == 1)
-                        g.drawImage(tex.player[0], (int) x, (int) y, 48, 72, null);
+                        playerIdle.drawAnimation(g,(int)x,(int)y,48,72);
                     else
-                        g.drawImage(tex.player[0], (int) x + 48, (int) y, -48, 72, null);
+                        playerIdle.drawAnimation(g,(int)x+48,(int)y,-48,72);
                 }
 
             }

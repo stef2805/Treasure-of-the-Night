@@ -16,6 +16,8 @@ public class Texture
     public BufferedImage[] player = new BufferedImage[16];
     public BufferedImage[] player_jump = new BufferedImage[8];
     public BufferedImage[] player_die = new BufferedImage[8];
+
+    public BufferedImage[] player_idle = new BufferedImage[4];
     public BufferedImage[] coin = new BufferedImage[9];
     public BufferedImage[] flagMoving = new BufferedImage[5];
     public BufferedImage[] batFlying = new BufferedImage[8];
@@ -75,6 +77,13 @@ public class Texture
         player_die[5] = ps.grabImage(6,8,32,64);
         player_die[6] = ps.grabImage(7,8,32,64);
         player_die[7] = ps.grabImage(8,8,32,64);
+
+        player_idle[0] = ps.grabImage(1,1,32,64);
+        player_idle[1] = ps.grabImage(2,1,32,64);
+        player_idle[2] = ps.grabImage(1,2,32,64);
+        player_idle[3] = ps.grabImage(2,2,32,64);
+
+
 
         coin[0] = bs.grabImage(1,2,32,32);          //coin animation
         coin[1] = bs.grabImage(2,2,32,32);
