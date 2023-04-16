@@ -36,7 +36,7 @@ public class Game extends Canvas implements Runnable
     private void init()
     {
         BufferedImageLoader loader = new BufferedImageLoader();
-        level1 = loader.loadImage("/hartalvll1.png");
+        level1 = loader.loadImage("/hartalvl1-2.png");
         padure = loader.loadImage("/fundal.png");       //background
 
         cam = new Camera(0,0);

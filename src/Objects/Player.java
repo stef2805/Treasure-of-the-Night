@@ -9,7 +9,8 @@ import window.Game;
 import window.Handler;
 
 import java.awt.*;
-import java.util.LinkedList;
+
+import static jdk.nashorn.internal.objects.NativeMath.abs;
 
 public class Player extends GameObject
 {
@@ -28,7 +29,6 @@ public class Player extends GameObject
     private Animation playerWalk;
     private Animation playerJump;
     private Animation playerDie;
-    private int facing;
 
 
     Texture tex = Game.getInstance();
@@ -93,18 +93,18 @@ public class Player extends GameObject
             if (jumping && facing == 1) {
                 playerJump.drawAnimation(g, (int) x, (int) y, 48, 72);
             } else if (jumping && facing == -1) {
-                playerJump.drawAnimation(g, (int) x + 32, (int) y, -48, 72);
+                playerJump.drawAnimation(g, (int) x + 48, (int) y, -48, 72);
 
             } else {
                 if (velX > 0) {
                     playerWalk.drawAnimation(g, (int) x, (int) y, 48, 72);
                 } else if (velX < 0)
-                    playerWalk.drawAnimation(g, (int) x + 32, (int) y, -48, 72);
+                    playerWalk.drawAnimation(g, (int) x + 48, (int) y, -48, 72);
                 else {
                     if (facing == 1)
                         g.drawImage(tex.player[0], (int) x, (int) y, 48, 72, null);
                     else
-                        g.drawImage(tex.player[0], (int) x + 32, (int) y, -48, 72, null);
+                        g.drawImage(tex.player[0], (int) x + 48, (int) y, -48, 72, null);
                 }
 
             }
@@ -176,6 +176,13 @@ public class Player extends GameObject
                     }
                 }
             }
+            if(tempObject.getID()==ObjectID.LavaBlock)           //verific daca a atins lava
+            {
+                if(getBounds().intersects(tempObject.getBounds()))
+                {
+                    alive = false;
+                }
+            }
             if(tempObject.getID() == ObjectID.Flag)         //verific daca a atins un flag de final de nivel
             {
                 if(getBoundsRight().intersects(tempObject.getBounds()) ||getBoundsLeft().intersects(tempObject.getBounds()))
@@ -190,6 +197,35 @@ public class Player extends GameObject
                 }
             }
 
+            if(tempObject.getID() == ObjectID.Bat)                          //daca am un liliac
+            {
+                if(getBoundsRight().intersects(tempObject.getBounds()))     //verific daca a intrat in zona liliacului
+                {
+                    if(x >= tempObject.getX())                              //mut liliacul spre jucator
+                    {
+                        tempObject.setFacing(1);
+                        tempObject.setX(tempObject.getX()+1);
+                        //System.out.println("X+5");
+                    }
+                    else {
+                        tempObject.setFacing(-1);
+                        tempObject.setX(tempObject.getX() - 1);
+                    }
+
+                    if(y >= tempObject.getY())
+                    {
+                        tempObject.setY(tempObject.getY()+1);
+                        //System.out.println("Y+5");
+                    }
+                    else
+                        tempObject.setY(tempObject.getY()-1);
+
+                    if(Math.abs(x- tempObject.getX())<20 && Math.abs(y- tempObject.getY())<20)      //daca am contact de aproape cu liliacul
+                    {
+                       alive = false;
+                    }
+                }
+            }
         }
     }
     public void die()                           //functie de terminare joc atunci cand moare jucatorul

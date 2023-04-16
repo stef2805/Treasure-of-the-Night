@@ -5,6 +5,7 @@ import java.awt.*;
 public abstract class GameObject
 {
     protected ObjectID id;
+    protected int facing = 1;
     protected float x,y;
     protected float velX = 0;
     protected float velY = 0;
@@ -46,11 +47,18 @@ public abstract class GameObject
     public void setX(float x){this.x = x;}
     public void setY(float y){this.y = y;}
 
-    public float getVelX(){return velX;}
-    public float getVelY(){return velY;}
-    public void setVelX(float x){this.velX = x;}
-    public void setVelY(float y){this.velY = y;}
+    public float getVelX() {return velX;}
+    public float getVelY() {return velY;}
+    public void setVelX(float x) {this.velX = x;}
+    public void setVelY(float y) {this.velY = y;}
 
-    public ObjectID getID(){return this.id;}
+    public ObjectID getID() {return this.id;}
 
+    public int getFacing() {
+        return facing;
+    }
+
+    public void setFacing(int facing) {
+        this.facing = facing;
+    }
 }

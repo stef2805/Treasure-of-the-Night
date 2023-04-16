@@ -1,19 +1,17 @@
 package window;
 
 import Objects.Block;
+import Objects.Bat;
 import Objects.Coin;
 import Objects.Flag;
 import Objects.Player;
-import window.Camera;
+import Objects.LavaBlock;
 import framework.GameObject;
 import framework.ObjectID;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
-import java.util.Objects;
-
-import static java.lang.Object.*;
 
 public class Handler
 {
@@ -103,7 +101,19 @@ public class Handler
                 }
                 if(red>=220 && green<=10 && blue <=10)
                 {
+                    addObject(new LavaBlock(xx*32,yy*32,"animated",ObjectID.LavaBlock));
+                }
+                if(red==250 && green==100 && blue ==100)
+                {
+                    addObject(new LavaBlock(xx*32,yy*32,"static",ObjectID.LavaBlock));
+                }
+                if(red==0 && green==255 && blue ==255)
+                {
                     addObject(new Flag(xx*32,yy*32,ObjectID.Flag));
+                }
+                if(red==200 && green==100 && blue ==0)
+                {
+                    addObject(new Bat(xx*32,yy*32,ObjectID.Bat));
                 }
 
             }

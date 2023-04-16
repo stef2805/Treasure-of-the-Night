@@ -6,14 +6,19 @@ import java.awt.image.BufferedImage;
 
 public class Texture
 {
-    SpriteSheet bs,ps;
+    SpriteSheet bs, ps, fs, es;          //bs = block sheet;  ps = player sheet; fs = flag sheet; es = enemies sheet
     private BufferedImage block_sheet = null;
     private BufferedImage player_sheet = null;
+    private BufferedImage flag_sheet = null;
+    private BufferedImage enemies_sheet = null;
     public BufferedImage[] block = new BufferedImage[2];
+    public BufferedImage[] lavaBlock = new BufferedImage[6];
     public BufferedImage[] player = new BufferedImage[16];
     public BufferedImage[] player_jump = new BufferedImage[8];
     public BufferedImage[] player_die = new BufferedImage[8];
     public BufferedImage[] coin = new BufferedImage[9];
+    public BufferedImage[] flagMoving = new BufferedImage[5];
+    public BufferedImage[] batFlying = new BufferedImage[8];
 
     public Texture()
     {
@@ -21,9 +26,13 @@ public class Texture
 
         player_sheet = loader.loadImage("/erouu.png");
         block_sheet = loader.loadImage("/block_sheet.png");
+        flag_sheet = loader.loadImage("/flagg.png");
+        enemies_sheet = loader.loadImage("/enemies.png");
 
         bs = new SpriteSheet(block_sheet);
         ps = new SpriteSheet(player_sheet);
+        fs = new SpriteSheet(flag_sheet);
+        es = new SpriteSheet(enemies_sheet);
         
         getTextures();
     }
@@ -32,6 +41,13 @@ public class Texture
     {
         block[0] = bs.grabImage(1,1,32,32);     //dirt
         block[1] = bs.grabImage(2,1,32,32);     //grass
+
+        lavaBlock[0] = bs.grabImage(3,1,32,32); //lava anim 1
+        lavaBlock[1] = bs.grabImage(4,1,32,32); //lava anim 2
+        lavaBlock[2] = bs.grabImage(5,1,32,32); //lava anim 3
+        lavaBlock[3] = bs.grabImage(6,1,32,32); //lava static 1
+        lavaBlock[4] = bs.grabImage(7,1,32,32); //lava static 2
+        lavaBlock[5] = bs.grabImage(8,1,32,32); //lava static 3
 
         player[0] = ps.grabImage(1,4,32,64);    //player walking 1
         player[1] = ps.grabImage(2,4,32,64);    //player walking 2
@@ -69,6 +85,23 @@ public class Texture
         coin[6] = bs.grabImage(1,3,32,32);
         coin[7] = bs.grabImage(2,3,32,32);
         coin[8] = bs.grabImage(3,3,32,32);
+
+        flagMoving[0] = fs.grabImage(1,1,32,32);
+        flagMoving[1] = fs.grabImage(2,1,32,32);
+        flagMoving[2] = fs.grabImage(3,1,32,32);
+        flagMoving[3] = fs.grabImage(4,1,32,32);
+        flagMoving[4] = fs.grabImage(5,1,32,32);
+
+        //batFlying[0] = es.grabImage(1,1,44,26);
+        //batFlying[1] = es.grabImage(2,1,32,26);
+       // batFlying[2] = es.grabImage(3,1,26,26);
+        batFlying[3] = es.grabImage(4,1,26,26);
+        batFlying[4] = es.grabImage(5,1,26,26);
+        batFlying[5] = es.grabImage(6,1,26,26);
+        batFlying[6] = es.grabImage(7,1,26,26);
+        batFlying[7] = es.grabImage(8,1,26,26);
+
+
     }
 
 

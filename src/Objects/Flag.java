@@ -3,28 +3,30 @@ package Objects;
 import framework.GameObject;
 import framework.ObjectID;
 import framework.Texture;
+import window.Animation;
 import window.Game;
 
 import java.awt.*;
 
 public class Flag extends GameObject {
     Texture tex = Game.getInstance();
-    private int type;
+    private Animation flagMoving = null;
     public Flag(float x, float y,ObjectID id)
     {
         super(x,y,id);
+        flagMoving = new Animation(5,tex.flagMoving[0],tex.flagMoving[1],tex.flagMoving[2],tex.flagMoving[3],tex.flagMoving[4]);
     }
 
     @Override
-    public void tick() {
-
+    public void tick()
+    {
+        flagMoving.runAnimatin();
     }
 
     @Override
     public void render(Graphics g)
     {
-        g.setColor(Color.red);
-        g.fillRect((int)x,(int)y,32,32);
+        flagMoving.drawAnimation(g,(int)x,(int)y-32,2*32,2*32);
     }
 
     @Override
