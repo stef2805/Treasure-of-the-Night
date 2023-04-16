@@ -63,7 +63,13 @@ public class Player extends GameObject
             alive = false;
             die();
         }
+        if (velX > 0)
+            facing = 1;
+        if (velX < 0)
+            facing = -1;
+
         Collision();
+
         playerWalk.runAnimatin();
         playerJump.runAnimatin();
         playerDie.runAnimatin();
@@ -88,10 +94,6 @@ public class Player extends GameObject
         }
         else
         {
-            if (velX > 0)
-                facing = 1;
-            if (velX < 0)
-                facing = -1;
             if (jumping && facing == 1) {
                 playerJump.drawAnimation(g, (int) x, (int) y, 48, 72);
             } else if (jumping && facing == -1) {
