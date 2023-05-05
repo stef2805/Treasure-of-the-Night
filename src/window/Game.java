@@ -17,35 +17,44 @@ import java.util.Random;
 
 public class Game extends Canvas implements Runnable
 {
+    static public int GAMEstate = 0; //0 = meniu, 1 = joc nou
+    static public int currentChoice = 0;
     public static int WIDTH;
     public static int HEIGHT;
+    public static int Xbg = -400;  //coordonata de unde incepe bg
 
     Handler handler;
     Camera cam;
     public static Texture tex;
 
-    public BufferedImage level1 = null;
+    //public BufferedImage level1 = null;
+    public BufferedImage menuIMG = null;
 
     private BufferedImage padure = null;
     Random rand = new Random();
     private boolean running = false;
     private Thread thread;
 
-    public static int LEVEL = 1;
+    public static int LEVEL = 0;
+    static public String[] options = {"Start again", "Continue", "Quit"};
+    private Color titleColor = new Color(250, 250, 250);;
+    private Font titleFont = new Font("Century Gothic", Font.BOLD, 40);
+    private Font font = new Font("Arial", Font.BOLD, 30);
 
     private void init()
     {
         BufferedImageLoader loader = new BufferedImageLoader();
-        level1 = loader.loadImage("/hartalvl1-2.png");
-        padure = loader.loadImage("/fundal.png");       //background
 
-        cam = new Camera(0,0);
+        menuIMG = loader.loadImage("/menuBG.png");       //background meniu
+        padure = loader.loadImage("/fundal.png");       //background joc
+
+        cam = new Camera(0, 0);
         WIDTH = getWidth();
         HEIGHT = getHeight();
         handler = new Handler(cam);
         tex = new Texture();
 
-        handler.LoadImageLevel(level1);
+        handler.switchLevel();
 
         this.addKeyListener(new KeyInput(handler));
     }
@@ -59,11 +68,11 @@ public class Game extends Canvas implements Runnable
         running = true;
         thread = new Thread(this);
         thread.start();
-
     }
 
     public void run()
     {
+        //this.addKeyListener(new KeyInput(handler));
         init();
         this.requestFocus();
         long lastTime = System.nanoTime();
@@ -73,7 +82,8 @@ public class Game extends Canvas implements Runnable
         long timer = System.currentTimeMillis();
         int updates = 0;
         int frames = 0;
-        while(running){
+        while(running)
+        {
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
@@ -94,24 +104,27 @@ public class Game extends Canvas implements Runnable
                 updates = 0;
             }
         }
+
     }
 
     private void tick()
     {
-
-        for(int i=0;i<handler.object.size();i++)
+        if(GAMEstate==1)
         {
-            if(handler.object.get(i).getID()==ObjectID.Player)
-            {
-                cam.tick(handler.object.get(i));
+            for (int i = 0; i < handler.object.size(); i++) {
+                if (handler.object.get(i).getID() == ObjectID.Player) {
+                    cam.tick(handler.object.get(i));
+                }
             }
+            handler.tick();
         }
-        handler.tick();
     }
+
     private void render()
     {
+
         BufferStrategy bs = this.getBufferStrategy();
-        if(bs==null)
+        if (bs == null)
         {
             this.createBufferStrategy(3);
             return;
@@ -121,17 +134,39 @@ public class Game extends Canvas implements Runnable
 
         /////////////////////////////
         g.setColor(Color.black);
-        g.fillRect(0,0,getWidth(),getHeight() );
+        g.fillRect(0, 0, getWidth(), getHeight());
 
-        g2d.translate(cam.getX(), cam.getY());    //begin of cam
+        //////////Stare meniu///////////
+        if (GAMEstate == 0)
+        {
+            g.drawImage(menuIMG, 0, 0, getWidth() , getHeight(), null);
+            g.setColor(titleColor);
+            g.setFont(titleFont);
+            g.drawString("Treasure of the night", 200, 250);
 
-        g.drawImage(padure,-400,0,WIDTH*3,HEIGHT,null);
-        g.drawImage(padure,-400+2*WIDTH*3,0,-WIDTH*3,HEIGHT,null);
+            // draw menu options
+            g.setFont(font);
+            for(int i = 0; i < options.length; i++) {
+                if(i == currentChoice) {
+                    g.setColor(Color.RED);
+                }
+                else {
+                    g.setColor(Color.WHITE);
+                }
+                g.drawString(options[i], 330, 300 + i * 35);
+            }
+        }
+        else
+        {
+            g2d.translate(cam.getX(), cam.getY());    //begin of cam
 
-        handler.render(g);
+            g.drawImage(padure, Xbg, 0, WIDTH * 3, HEIGHT, null);
+            g.drawImage(padure, Xbg + 2 * WIDTH * 3, 0, -WIDTH * 3, HEIGHT, null);
 
-        g2d.translate(-cam.getX(), -cam.getY());    //end of cam
-        ////////////////////////////
+            handler.render(g);
+
+            g2d.translate(-cam.getX(), -cam.getY());    //end of cam
+        }
         g.dispose();
         bs.show();
     }

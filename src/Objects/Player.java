@@ -10,17 +10,16 @@ import window.Handler;
 
 import java.awt.*;
 
-import static jdk.nashorn.internal.objects.NativeMath.abs;
-
 public class Player extends GameObject
 {
+
     private final float MAX_SPEED = 10;
     private float gravity = 0.3f;
     private float width = 32;
     private float height = 64;
-    private int collectedCoins = 0;
+    static public int collectedCoins = 0;
     private int MAX_COINS = 2;
-    private int lives = 2;
+    static private int lives = 2;
     private boolean alive = true;
     private long deadTime = 0;
 
@@ -30,6 +29,8 @@ public class Player extends GameObject
     private Animation playerJump;
     private Animation playerDie;
     private Animation playerIdle;
+    private Boolean dangerPassed = true;
+    private Font infoFont = new Font("Century Gothic", Font.ITALIC, 20);
 
 
     Texture tex = Game.getInstance();
@@ -47,8 +48,13 @@ public class Player extends GameObject
     @Override
     public void tick()
     {
+        int oldX;
+        oldX = (int)x;
+
         x+=velX;
         y+=velY;
+
+        Game.Xbg = Game.Xbg + ((int)x - oldX)/2;
 
         if(falling || jumping)
         {
@@ -60,8 +66,12 @@ public class Player extends GameObject
         }
         if(y>1000)
         {
+            if(dangerPassed)
+            {
+                lives--;
+                dangerPassed = false;
+            }
             alive = false;
-            die();
         }
         if (velX > 0)
             facing = 1;
@@ -79,8 +89,14 @@ public class Player extends GameObject
     @Override
     public void render(Graphics g)
     {
+        g.setColor(Color.RED);
+        g.setFont(infoFont);
+        g.drawString("Coins: "+ collectedCoins+"/2", (int)x, 50);
+        g.drawString("Lives: "+ lives,(int)x, 70 );
         if(!alive)
         {
+            Handler.DBop.deleteCheckpoint();
+            Player.collectedCoins = 0;
             velX = 0;
             velY = 0;
             playerDie.drawAnimation(g, (int) x, (int) y, 48, 72);
@@ -89,7 +105,13 @@ public class Player extends GameObject
             long currentTime = System.currentTimeMillis();                        //calculate the time needed to draw PLayerDie animation
             if(currentTime - deadTime>1500)
             {
-                die();
+                alive = true;
+                if(lives<=0)
+                    die();
+                else
+                    handler.switchLevel();
+                dangerPassed = true;
+                deadTime = 0;
             }
         }
         else
@@ -136,7 +158,7 @@ public class Player extends GameObject
             GameObject tempObject = handler.object.get(i);
             if(tempObject.getID()==ObjectID.Block)
             {
-                if(getBoundsTop().intersects(tempObject.getBounds()))       //TOP
+                if(getBoundsTop().intersects(tempObject.getBounds()))      //TOP
                 {
                     y = tempObject.getY() + 32;
                     velY = 0;
@@ -184,7 +206,13 @@ public class Player extends GameObject
             {
                 if(getBounds().intersects(tempObject.getBounds()))
                 {
-                    alive = false;
+                    //handler.switchLevel();
+                    if(dangerPassed)
+                    {
+                        lives--;
+                        dangerPassed = false;
+                        alive = false;
+                    }
                 }
             }
             if(tempObject.getID() == ObjectID.Flag)         //verific daca a atins un flag de final de nivel
@@ -194,6 +222,7 @@ public class Player extends GameObject
                     //switch lvl
                     if(collectedCoins==MAX_COINS)           //trecerea la nivelul urmator se realizeaza doar daca a gasit toate monedele
                     {
+                        Game.LEVEL++;
                         handler.switchLevel();
                         collectedCoins = 0;
                     }
@@ -226,14 +255,22 @@ public class Player extends GameObject
 
                     if(Math.abs(x- tempObject.getX())<20 && Math.abs(y- tempObject.getY())<20)      //daca am contact de aproape cu liliacul
                     {
-                       alive = false;
+                        if(dangerPassed)
+                        {
+                            lives--;
+                            dangerPassed = false;
+                            alive = false;
+                        }
+
                     }
                 }
             }
         }
     }
+
     public void die()                           //functie de terminare joc atunci cand moare jucatorul
     {
+        Handler.DBop.deleteCheckpoint();
         System.out.println("A murit ");
         System.exit(1);
     }
