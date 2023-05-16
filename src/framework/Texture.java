@@ -16,6 +16,8 @@ public class Texture
     public BufferedImage[] player = new BufferedImage[16];
     public BufferedImage[] player_jump = new BufferedImage[8];
     public BufferedImage[] player_die = new BufferedImage[8];
+    public BufferedImage[] player_atack = new BufferedImage[8];
+
 
     public BufferedImage[] player_idle = new BufferedImage[4];
     public BufferedImage[] coin = new BufferedImage[9];
@@ -78,6 +80,15 @@ public class Texture
         player_die[6] = ps.grabImage(7,8,32,64);
         player_die[7] = ps.grabImage(8,8,32,64);
 
+        player_atack[0] = ps.grabImage(1,9,32,64);     //player atack
+        player_atack[1] = ps.grabImage(2,9,32,64);
+        player_atack[2] = ps.grabImage(3,9,32,64);
+        player_atack[3] = ps.grabImage(4,9,32,64);
+        player_atack[4] = ps.grabImage(5,9,32,64);
+        player_atack[5] = ps.grabImage(6,9,32,64);
+        player_atack[6] = ps.grabImage(7,9,32,64);
+        player_atack[7] = ps.grabImage(8,9,32,64);
+
         player_idle[0] = ps.grabImage(1,1,32,64);
         player_idle[1] = ps.grabImage(2,1,32,64);
         player_idle[2] = ps.grabImage(1,2,32,64);
@@ -101,9 +112,6 @@ public class Texture
         flagMoving[3] = fs.grabImage(4,1,32,32);
         flagMoving[4] = fs.grabImage(5,1,32,32);
 
-        //batFlying[0] = es.grabImage(1,1,44,26);
-        //batFlying[1] = es.grabImage(2,1,32,26);
-       // batFlying[2] = es.grabImage(3,1,26,26);
         batFlying[3] = es.grabImage(4,1,26,26);
         batFlying[4] = es.grabImage(5,1,26,26);
         batFlying[5] = es.grabImage(6,1,26,26);

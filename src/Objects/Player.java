@@ -19,9 +19,12 @@ public class Player extends GameObject
     private float height = 64;
     static public int collectedCoins = 0;
     private int MAX_COINS = 2;
-    static private int lives = 2;
+    static private int lives = 3;
+    static public boolean isAtacking = false;
     private boolean alive = true;
     private long deadTime = 0;
+    private long atackTime = 0;
+
 
     private Handler handler;
     private Camera cam;
@@ -29,6 +32,7 @@ public class Player extends GameObject
     private Animation playerJump;
     private Animation playerDie;
     private Animation playerIdle;
+    private Animation playerAtack;
     private Boolean dangerPassed = true;
     private Font infoFont = new Font("Century Gothic", Font.ITALIC, 20);
 
@@ -43,7 +47,9 @@ public class Player extends GameObject
         playerWalk = new Animation(5,tex.player[0],tex.player[1],tex.player[2],tex.player[3],tex.player[4],tex.player[5],tex.player[6],tex.player[7]);
         playerJump = new Animation(5,tex.player_jump[0],tex.player_jump[1],tex.player_jump[2],tex.player_jump[3],tex.player_jump[4],tex.player_jump[5],tex.player_jump[6],tex.player_jump[7]);
         playerDie = new Animation(12,tex.player_die[0],tex.player_die[1],tex.player_die[2],tex.player_die[3],tex.player_die[4],tex.player_die[5],tex.player_die[6],tex.player_die[7]);
+        playerAtack = new Animation(9, tex.player_atack[0],tex.player_atack[1],tex.player_atack[2],tex.player_atack[3],tex.player_atack[4],tex.player_atack[5],tex.player_atack[6],tex.player_atack[7]);
         playerIdle = new Animation(15,tex.player_idle[0],tex.player_idle[1],tex.player_idle[2],tex.player_idle[3]);
+
     }
     @Override
     public void tick()
@@ -84,6 +90,7 @@ public class Player extends GameObject
         playerJump.runAnimatin();
         playerDie.runAnimatin();
         playerIdle.runAnimatin();
+        playerAtack.runAnimatin();
     }
 
     @Override
@@ -91,8 +98,8 @@ public class Player extends GameObject
     {
         g.setColor(Color.RED);
         g.setFont(infoFont);
-        g.drawString("Coins: "+ collectedCoins+"/2", (int)x, 50);
-        g.drawString("Lives: "+ lives,(int)x, 70 );
+        g.drawString("Coins: "+ collectedCoins+"/2", (int)x-10, (int)y-140);
+        g.drawString("Lives: "+ lives,(int)x-10, (int)y-120 );
         if(!alive)
         {
             Handler.DBop.deleteCheckpoint();
@@ -112,6 +119,22 @@ public class Player extends GameObject
                     handler.switchLevel();
                 dangerPassed = true;
                 deadTime = 0;
+            }
+        }
+
+        else if(isAtacking)
+        {
+            if(facing == 1)
+                playerAtack.drawAnimation(g, (int) x, (int) y, 48, 72);
+            else
+                playerAtack.drawAnimation(g, (int) x + 48, (int) y, -48, 72);
+            if(atackTime==0)
+                atackTime = System.currentTimeMillis();
+            long currentTime = System.currentTimeMillis();                        //calculate the time needed to draw player atack animation
+            if(currentTime - atackTime>1000)
+            {
+                isAtacking = false;
+                atackTime = 0;
             }
         }
         else
@@ -255,7 +278,11 @@ public class Player extends GameObject
 
                     if(Math.abs(x- tempObject.getX())<20 && Math.abs(y- tempObject.getY())<20)      //daca am contact de aproape cu liliacul
                     {
-                        if(dangerPassed)
+                        if(isAtacking)
+                        {
+                            handler.object.remove(tempObject);
+                        }
+                        else if(dangerPassed)
                         {
                             lives--;
                             dangerPassed = false;

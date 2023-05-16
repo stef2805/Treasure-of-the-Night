@@ -45,6 +45,9 @@ public class KeyInput extends KeyAdapter
                         tempObject.setJumping(true);
                         tempObject.setVelY(-10);
                     }
+                    if (key == KeyEvent.VK_SPACE) {
+                        Player.isAtacking = true;
+                    }
 
                 }
             }

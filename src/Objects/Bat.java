@@ -8,8 +8,6 @@ import window.Game;
 
 import java.awt.*;
 
-import static jdk.nashorn.internal.objects.NativeMath.abs;
-
 public class Bat extends GameObject
 {
     private Animation BatFlying = null;

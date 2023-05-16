@@ -9,8 +9,8 @@ import java.awt.*;
 
 public class Block extends GameObject {
     Texture tex = Game.getInstance();
-    private int type;
-    public Block(float x, float y, int type ,ObjectID id)
+    private String type;
+    public Block(float x, float y, String type ,ObjectID id)
     {
         super(x,y,id);
         this.type = type;
@@ -24,11 +24,11 @@ public class Block extends GameObject {
     @Override
     public void render(Graphics g)
     {
-        if(type==0) //dirt
+        if(type.compareTo("dirt")==0) //dirt
         {
             g.drawImage(tex.block[0],(int)x,(int)y,null);
         }
-        if(type==1) //grass
+        if(type.compareTo("grass")==0) //grass
         {
             g.drawImage(tex.block[1],(int)x,(int)y,null);
         }

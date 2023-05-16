@@ -142,11 +142,11 @@ public class Game extends Canvas implements Runnable
             g.drawImage(menuIMG, 0, 0, getWidth() , getHeight(), null);
             g.setColor(titleColor);
             g.setFont(titleFont);
-            g.drawString("Treasure of the night", 200, 250);
+            g.drawString("Treasure of the night", 200, 250);            //titlu
 
             // draw menu options
             g.setFont(font);
-            for(int i = 0; i < options.length; i++) {
+            for(int i = 0; i < options.length; i++) {                           //selectare optiune
                 if(i == currentChoice) {
                     g.setColor(Color.RED);
                 }
@@ -160,8 +160,8 @@ public class Game extends Canvas implements Runnable
         {
             g2d.translate(cam.getX(), cam.getY());    //begin of cam
 
-            g.drawImage(padure, Xbg, 0, WIDTH * 3, HEIGHT, null);
-            g.drawImage(padure, Xbg + 2 * WIDTH * 3, 0, -WIDTH * 3, HEIGHT, null);
+            g.drawImage(padure, Xbg, -650, WIDTH * 4, HEIGHT*4, null);
+            g.drawImage(padure, Xbg +  WIDTH * 4, -650, WIDTH * 4, HEIGHT*4, null);
 
             handler.render(g);
 

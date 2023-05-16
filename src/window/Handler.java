@@ -2,12 +2,7 @@ package window;
 
 import DBoperate.Checkpoint;
 import DBoperate.DBoperator;
-import Objects.Block;
-import Objects.Bat;
-import Objects.Coin;
-import Objects.Flag;
-import Objects.Player;
-import Objects.LavaBlock;
+import Objects.*;
 import framework.GameObject;
 import framework.ObjectID;
 
@@ -25,6 +20,7 @@ public class Handler
     private Camera cam;
     public BufferedImage level1 = null;
     public BufferedImage level2 = null;
+    public BufferedImage level3 = null;
     private Connection c = null;
     static public DBoperator DBop = null;                 //Realizeaza conexiunea cu baza de date. Are nevoie pt a incarca harta.
 
@@ -67,14 +63,15 @@ public class Handler
         this.object.remove(go);
     }
 
-    public void LoadImageLevel(BufferedImage image)
+    public void LoadImageLevel(BufferedImage image) throws EmptyBufferedImageException
     {
+        BlockFactory blockFactory = new BlockFactory();
         Checkpoint checkpoint = DBop.getCheckpoint();
         if(checkpoint != null)
             Player.collectedCoins = checkpoint.colectedCoins;
         if(image==null)
         {
-            System.out.println("imagine vida");
+            throw new EmptyBufferedImageException();
         }
         int w = image.getWidth();
         int h = image.getHeight();
@@ -90,7 +87,7 @@ public class Handler
 
                 if(red<=10 && green<=10 && blue <=10)
                 {
-                    addObject(new Block(xx*32,yy*32,0,ObjectID.Block));
+                    addObject(blockFactory.makeBlock("normal",xx*32,yy*32,"dirt"));
                 }
                 if(red<=10 && green<=10 && blue >=200)
                 {
@@ -103,7 +100,7 @@ public class Handler
                 }
                 if(red==50 && green==150 && blue ==50)
                 {
-                    addObject(new Block(xx*32,yy*32, 1,ObjectID.Block));
+                    addObject(blockFactory.makeBlock("normal",xx*32,yy*32, "grass"));
                 }
                 if(red>=200 && green>=200 && blue <=10)
                 {
@@ -121,11 +118,11 @@ public class Handler
                 }
                 if(red>=220 && green<=10 && blue <=10)
                 {
-                    addObject(new LavaBlock(xx*32,yy*32,"animated",ObjectID.LavaBlock));
+                    addObject(blockFactory.makeBlock("lava",xx*32,yy*32,"animated"));
                 }
                 if(red==250 && green==100 && blue ==100)
                 {
-                    addObject(new LavaBlock(xx*32,yy*32,"static",ObjectID.LavaBlock));
+                    addObject(blockFactory.makeBlock("lava",xx*32,yy*32,"static"));
                 }
                 if(red==0 && green==255 && blue ==255)
                 {
@@ -160,12 +157,35 @@ public class Handler
         {
             case 0:
                 level1 = loader.loadImage("/hartalvl1-2.png");
-                LoadImageLevel(level1);
+                try {
+                    LoadImageLevel(level1);
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Problema a aparut la imaginea nivelului 1");
+                }
                 break;
             case 1:
                 level2 = loader.loadImage("/hartalvl2.png");
-                LoadImageLevel(level2);
+                try {
+                    LoadImageLevel(level2);
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Problema a aparut la imaginea nivelului 2");
+                }
                 break;
+            case 2:
+                level3 = loader.loadImage("/hartalvl3.png");
+                try {
+                    LoadImageLevel(level3);
+                }
+                catch(Exception e)
+                {
+                    System.out.println("Problema a aparut la imaginea nivelului 3");
+                }
+                break;
+
         }
         DBop.deleteCheckpoint();
     }
