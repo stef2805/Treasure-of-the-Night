@@ -1,7 +1,7 @@
 package DBoperate;
 
 import java.sql.*;
-public class DBoperator
+public class DBoperator                             //este clasa responsabila de operatiunile cu baza de date
 {
     private Connection con;
     private Statement stmt;
@@ -36,7 +36,7 @@ public class DBoperator
         }
         return false;
     }
-    public void addCheckpoint(Checkpoint cp)
+    public void addCheckpoint(Checkpoint cp)                //metoda care parseaza de la obiect checkpoint la string stocat in db
     {
         try
         {
@@ -51,7 +51,7 @@ public class DBoperator
             System.out.println("Problema la metoda de adaugare checkpoint");
         }
     }
-    public Checkpoint getCheckpoint()
+    public Checkpoint getCheckpoint()                           //metoda care converteste sampurile savate in tabel la obiect checkpoint
     {
         try
         {
@@ -70,13 +70,12 @@ public class DBoperator
             return null;
         }
     }
-    public void deleteCheckpoint()
+    public void deleteCheckpoint()                                  //deoarece nu are rost sa stocam mai mult de un checkpoint, atuci cand stergem stergem tot din db
     {
         try
         {
             String comanda = "DELETE from GAME_INFO ";
             stmt.executeUpdate(comanda);
-            //stmt.close();
             con.commit();
         }
         catch(Exception e)

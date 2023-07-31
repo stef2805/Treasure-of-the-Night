@@ -10,8 +10,8 @@ import java.awt.*;
 public class Block extends GameObject {
     Texture tex = Game.getInstance();
     private String type;
-    public Block(float x, float y, String type ,ObjectID id)
-    {
+    public Block(float x, float y, String type ,ObjectID id)            //type are rolul de a determina ce tip de bloc e
+    {                                                                   //avem o singura clasa de block pt ca au comportament exact la fel, difera doar texutra
         super(x,y,id);
         this.type = type;
     }
@@ -22,7 +22,7 @@ public class Block extends GameObject {
     }
 
     @Override
-    public void render(Graphics g)
+    public void render(Graphics g)                                          //desenez din texture, imaginea nu este salvata decat o singura data
     {
         if(type.compareTo("dirt")==0) //dirt
         {

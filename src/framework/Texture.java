@@ -17,6 +17,7 @@ public class Texture
     public BufferedImage[] player_jump = new BufferedImage[8];
     public BufferedImage[] player_die = new BufferedImage[8];
     public BufferedImage[] player_atack = new BufferedImage[8];
+    public BufferedImage[] skeleton_Walking = new BufferedImage[8];
 
 
     public BufferedImage[] player_idle = new BufferedImage[4];
@@ -117,6 +118,15 @@ public class Texture
         batFlying[5] = es.grabImage(6,1,26,26);
         batFlying[6] = es.grabImage(7,1,26,26);
         batFlying[7] = es.grabImage(8,1,26,26);
+
+        //skeleton_Walking[0] = es.grabImage(1,5,25,32);
+        skeleton_Walking[1] = es.grabImageWithOffsetLeft(2,5,19,32,25);
+        skeleton_Walking[2] = es.grabImageWithOffsetLeft(3,5,19,32,25);
+        skeleton_Walking[3] = es.grabImageWithOffsetLeft(4,5,19,32,25);
+        skeleton_Walking[4] = es.grabImageWithOffsetLeft(5,5,19,32,25);
+        skeleton_Walking[5] = es.grabImageWithOffsetLeft(6,5,19,32,25);
+        skeleton_Walking[6] = es.grabImageWithOffsetLeft(7,5,19,32,25);
+        skeleton_Walking[7] = es.grabImageWithOffsetLeft(8,5,19,32,25);
 
 
     }

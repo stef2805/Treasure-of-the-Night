@@ -27,11 +27,14 @@ public class Handler
     public Handler(Camera cam)
     {
         this.cam = cam;
-        try {
+        try                                               //se realizeaza conexiunea cu baza de date
+        {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:GAME_SAVED_DATA.db");
-            DBop = new DBoperator(c);
-        } catch ( Exception e ) {
+            DBop = new DBoperator(c);                   //se creaza un obiect operator pentru baza de date
+        }
+        catch ( Exception e )
+        {
             System.out.println("Eroare la stabilirea conexiunii cu baza de date");
         }
     }
@@ -65,10 +68,10 @@ public class Handler
 
     public void LoadImageLevel(BufferedImage image) throws EmptyBufferedImageException
     {
-        BlockFactory blockFactory = new BlockFactory();
-        Checkpoint checkpoint = DBop.getCheckpoint();
+        BlockFactory blockFactory = new BlockFactory();                         //creez o fabrica de blocuri
+        Checkpoint checkpoint = DBop.getCheckpoint();                           //scot checkpoint-ul salvat din baza de date
         if(checkpoint != null)
-            Player.collectedCoins = checkpoint.colectedCoins;
+            Player.collectedCoins = checkpoint.colectedCoins;                   //daca am checkpoint iau din el numarul de monede colectate
         if(image==null)
         {
             throw new EmptyBufferedImageException();
@@ -76,9 +79,9 @@ public class Handler
         int w = image.getWidth();
         int h = image.getHeight();
 
-        for (int xx=0;xx<h;xx++)
+        for (int xx=0;xx<h;xx++)                                            //nivelul este salvat ca o imagine cu pixeli
         {
-            for(int yy=0;yy<w;yy++)
+            for(int yy=0;yy<w;yy++)                                         //in functie de culoare apixelilor imi dau seama de tipul blocului care va fi creat
             {
                 int pixel = image.getRGB(xx,yy);
                 int red = (pixel>>16) & 0xff;
@@ -91,9 +94,9 @@ public class Handler
                 }
                 if(red<=10 && green<=10 && blue >=200)
                 {
-                    if(checkpoint == null)
+                    if(checkpoint == null)                              //daca nu am checkpoint salvat desenez jucatorul la coordonata initiala indicata pe harta
                         addObject(new Player(xx*32,yy*32, this, cam ,ObjectID.Player));
-                    else
+                    else                                                //altfel il pun la coordonata salvata
                     {
                         addObject(new Player(checkpoint.X, checkpoint.Y,this, cam, ObjectID.Player));
                     }
@@ -104,9 +107,9 @@ public class Handler
                 }
                 if(red>=200 && green>=200 && blue <=10)
                 {
-                    if(checkpoint == null)
+                    if(checkpoint == null)                                              //daca nu este niciun checkpoint in baza de date atunci pun pe harta toate monedele
                         addObject(new Coin(xx*32,yy*32,ObjectID.Coin));
-                    else
+                    else                                                                //altfel pun doar monedele ramase
                     {
                         if(checkpoint.colectedCoins  > 0)
                         {
@@ -132,6 +135,8 @@ public class Handler
                 {
                     addObject(new Bat(xx*32,yy*32,ObjectID.Bat));
                 }
+                if(red ==110 && green ==15 && blue==103 )
+                    addObject(new Skeleton(xx*32,yy*32,200,ObjectID.Skeleton));
 
             }
         }
@@ -143,20 +148,20 @@ public class Handler
 
     public void switchLevel()
     {
-        Checkpoint checkpoint = DBop.getCheckpoint();
-        if(checkpoint!=null)
+        Checkpoint checkpoint = DBop.getCheckpoint();                       //vad daca am checkpoint
+        if(checkpoint!=null)                                                //dac am nivelul este cel indicat in checkpoint
         {
             Game.LEVEL = checkpoint.lvl;
             Player.collectedCoins = checkpoint.colectedCoins;
         }
-        clearLevel();
+        clearLevel();                                                       //se curata nivelul vechi si se deseneaza cel nou
         cam.setX(0);
         Game.Xbg = -400;
         BufferedImageLoader loader = new BufferedImageLoader();
         switch(Game.LEVEL)
         {
             case 0:
-                level1 = loader.loadImage("/hartalvl1-2.png");
+                level1 = loader.loadImage("/hartaLVL1.png");
                 try {
                     LoadImageLevel(level1);
                 }

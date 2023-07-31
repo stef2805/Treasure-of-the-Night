@@ -15,5 +15,10 @@ public class SpriteSheet
         BufferedImage img = image.getSubimage((column*width)-width, (row*height)-height,width,height);
         return img;
     }
+    public BufferedImage grabImageWithOffsetLeft(int column, int row, int width, int height, int leftOffset)
+    {
+        BufferedImage img = image.getSubimage((column*width)-width+leftOffset, (row*height)-height,width,height);
+        return img;
+    }
 
 }

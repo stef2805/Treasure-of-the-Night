@@ -7,5 +7,6 @@ public enum ObjectID
     Flag(),
     LavaBlock(),
     Bat(),
+    Skeleton(),
     Block();
 }

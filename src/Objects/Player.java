@@ -44,6 +44,7 @@ public class Player extends GameObject
         super(x,y,id);
         this.cam = cam;
         this.handler = handler;
+        ///////initializare animatii//////////
         playerWalk = new Animation(5,tex.player[0],tex.player[1],tex.player[2],tex.player[3],tex.player[4],tex.player[5],tex.player[6],tex.player[7]);
         playerJump = new Animation(5,tex.player_jump[0],tex.player_jump[1],tex.player_jump[2],tex.player_jump[3],tex.player_jump[4],tex.player_jump[5],tex.player_jump[6],tex.player_jump[7]);
         playerDie = new Animation(12,tex.player_die[0],tex.player_die[1],tex.player_die[2],tex.player_die[3],tex.player_die[4],tex.player_die[5],tex.player_die[6],tex.player_die[7]);
@@ -60,19 +61,19 @@ public class Player extends GameObject
         x+=velX;
         y+=velY;
 
-        Game.Xbg = Game.Xbg + ((int)x - oldX)/2;
+        Game.Xbg = Game.Xbg + ((int)x - oldX)/2;        //mutare fundal cu jumatate din viteza din care se deplaseaza jucatorul
 
-        if(falling || jumping)
+        if(falling || jumping)                          //daca sare sau este in picaj se ajuseaza viteza pe y
         {
             velY +=gravity;
             if(velY>MAX_SPEED)
             {
-                velY = MAX_SPEED;
+                velY = MAX_SPEED;                   // viteza pe y nu poate depasi pragul MAX_SPEED
             }
         }
         if(y>1000)
         {
-            if(dangerPassed)
+            if(dangerPassed)                        //verific daca a trecut pericolul si scad o viata. Are rolul de a scadea o singura data o viata atunci cand se ruleaza animatia
             {
                 lives--;
                 dangerPassed = false;
@@ -107,22 +108,22 @@ public class Player extends GameObject
             velX = 0;
             velY = 0;
             playerDie.drawAnimation(g, (int) x, (int) y, 48, 72);
-            if(deadTime==0)
+            if(deadTime==0)                                                       //calcul moment initial al mortii
                 deadTime = System.currentTimeMillis();
-            long currentTime = System.currentTimeMillis();                        //calculate the time needed to draw PLayerDie animation
-            if(currentTime - deadTime>1500)
+            long currentTime = System.currentTimeMillis();                        //calcul timp curent - timpul mortii
+            if(currentTime - deadTime>1500)                                       //desenez o animatie de moarte timp de 1.5 sec
             {
-                alive = true;
+                alive = true;                                                     //revine la viata
                 if(lives<=0)
-                    die();
+                    die();                                                        //daca a consumat toate vietile moare
                 else
-                    handler.switchLevel();
-                dangerPassed = true;
+                    handler.switchLevel();                                        //altfel reia nivelul
+                dangerPassed = true;                                              //se reseteaza dangerPassed si deadTime
                 deadTime = 0;
             }
         }
 
-        else if(isAtacking)
+        else if(isAtacking)                                                      //animatie de atac
         {
             if(facing == 1)
                 playerAtack.drawAnimation(g, (int) x, (int) y, 48, 72);
@@ -131,14 +132,14 @@ public class Player extends GameObject
             if(atackTime==0)
                 atackTime = System.currentTimeMillis();
             long currentTime = System.currentTimeMillis();                        //calculate the time needed to draw player atack animation
-            if(currentTime - atackTime>1000)
+            if(currentTime - atackTime>1000)                                     //daca a trecut timpul de atac nu mai desenez animatia de atac
             {
                 isAtacking = false;
                 atackTime = 0;
             }
         }
         else
-        {
+        {                                                                       //determinare si afisare animatie in fuctie de stare
             if (jumping && facing == 1) {
                 playerJump.drawAnimation(g, (int) x, (int) y, 48, 72);
             } else if (jumping && facing == -1) {
@@ -229,8 +230,7 @@ public class Player extends GameObject
             {
                 if(getBounds().intersects(tempObject.getBounds()))
                 {
-                    //handler.switchLevel();
-                    if(dangerPassed)
+                    if(dangerPassed)                            //daca atinge lava ii scad nr de viet si spun ca este in pericol, pentru a nu scadea vieti de mai multe ori
                     {
                         lives--;
                         dangerPassed = false;
@@ -245,14 +245,29 @@ public class Player extends GameObject
                     //switch lvl
                     if(collectedCoins==MAX_COINS)           //trecerea la nivelul urmator se realizeaza doar daca a gasit toate monedele
                     {
-                        Game.LEVEL++;
+                        Game.LEVEL++;                       //trec la nivelul urmator
                         handler.switchLevel();
-                        collectedCoins = 0;
+                        collectedCoins = 0;                 //reset nr de monede pe niv urmator
                     }
 
                 }
             }
-
+            if(tempObject.getID() == ObjectID.Skeleton)         //verific daca a atins un flag de final de nivel
+            {
+                if(getBoundsRight().intersects(tempObject.getBounds()) || getBoundsLeft().intersects(tempObject.getBounds()))
+                {
+                    if(isAtacking)
+                    {
+                        handler.object.remove(tempObject);
+                    }
+                    else if(dangerPassed)
+                    {
+                        lives--;
+                        dangerPassed = false;
+                        alive = false;
+                    }
+                }
+            }
             if(tempObject.getID() == ObjectID.Bat)                          //daca am un liliac
             {
                 if(getBoundsRight().intersects(tempObject.getBounds()))     //verific daca a intrat in zona liliacului

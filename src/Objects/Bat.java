@@ -15,8 +15,6 @@ public class Bat extends GameObject
     private int facing;
     private float oldX;
 
-    public int velX = 0;
-    public int velY = 0;
 
     Texture tex = Game.getInstance();
 

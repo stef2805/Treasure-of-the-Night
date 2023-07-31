@@ -1,16 +1,11 @@
 package window;
 
-import Objects.Block;
-import Objects.Player;
-import Objects.Coin;
+
 import framework.KeyInput;
 import framework.ObjectID;
 import framework.Texture;
-import Objects.Flag;
-
 
 import java.awt.*;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -27,7 +22,6 @@ public class Game extends Canvas implements Runnable
     Camera cam;
     public static Texture tex;
 
-    //public BufferedImage level1 = null;
     public BufferedImage menuIMG = null;
 
     private BufferedImage padure = null;
@@ -36,7 +30,7 @@ public class Game extends Canvas implements Runnable
     private Thread thread;
 
     public static int LEVEL = 0;
-    static public String[] options = {"Start again", "Continue", "Quit"};
+    static public String[] options = {"Start again", "Continue", "Quit"};               //optiunile meniului
     private Color titleColor = new Color(250, 250, 250);;
     private Font titleFont = new Font("Century Gothic", Font.BOLD, 40);
     private Font font = new Font("Arial", Font.BOLD, 30);
@@ -48,13 +42,13 @@ public class Game extends Canvas implements Runnable
         menuIMG = loader.loadImage("/menuBG.png");       //background meniu
         padure = loader.loadImage("/fundal.png");       //background joc
 
-        cam = new Camera(0, 0);
+        cam = new Camera(0, 0);                         //camera
         WIDTH = getWidth();
         HEIGHT = getHeight();
         handler = new Handler(cam);
         tex = new Texture();
 
-        handler.switchLevel();
+        handler.switchLevel();                               //initializare nivel 1
 
         this.addKeyListener(new KeyInput(handler));
     }
@@ -66,13 +60,12 @@ public class Game extends Canvas implements Runnable
             return;
         }
         running = true;
-        thread = new Thread(this);
+        thread = new Thread(this);              //lansare thread nou
         thread.start();
     }
 
     public void run()
     {
-        //this.addKeyListener(new KeyInput(handler));
         init();
         this.requestFocus();
         long lastTime = System.nanoTime();
@@ -160,8 +153,8 @@ public class Game extends Canvas implements Runnable
         {
             g2d.translate(cam.getX(), cam.getY());    //begin of cam
 
-            g.drawImage(padure, Xbg, -650, WIDTH * 4, HEIGHT*4, null);
-            g.drawImage(padure, Xbg +  WIDTH * 4, -650, WIDTH * 4, HEIGHT*4, null);
+            g.drawImage(padure, Xbg, -650, WIDTH * 4, HEIGHT*3, null);
+            g.drawImage(padure, Xbg +  WIDTH * 4, -650, WIDTH * 4, HEIGHT*3, null);
 
             handler.render(g);
 

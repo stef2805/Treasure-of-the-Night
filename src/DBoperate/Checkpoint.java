@@ -1,6 +1,6 @@
 package DBoperate;
 
-public class Checkpoint {
+public class Checkpoint {                       //reprezinta tipul de obiect ce va fi parsat la string si stocat in baza de date
     public int lvl;
     public int colectedCoins;
     public int X;

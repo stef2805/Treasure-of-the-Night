@@ -3,7 +3,7 @@ package Objects;
 import framework.GameObject;
 import framework.ObjectID;
 
-public class BlockFactory {
+public class BlockFactory {                     //implementare factory pentru obiecte de tip bloc
     public BlockFactory(){}
     public GameObject makeBlock(String BlockType, float x, float y, String type)
     {
